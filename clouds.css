@@ -1,0 +1,41 @@
+:root {
+    --pos:5%;
+    font-family: 'Crimson Text', serif;
+}
+
+#cloud_left {
+    height: 50%;
+    position: fixed;
+    transform: scaleX(-1);
+    top: 25%;
+    left: var(--pos);
+    transition-property: left;
+    transition: left 1.5s ease-in-out;
+}
+
+#cloud_right {
+    height: 50%;
+    position: fixed;
+    top: 25%;
+    right: var(--pos);
+    transition-property: right;
+    transition: right 1.5s ease-in-out;
+}
+
+html:hover{
+    --pos: -75%;
+}
+
+html {
+    background-color: rgb(223, 255, 255);
+    max-width: 100vw;
+}
+
+H1 {
+    color: rgb(193, 193, 0);
+    font-size: 10vh;
+    position: absolute;
+    top:40vh;
+    width: 99vw;
+    text-align: center;
+}
