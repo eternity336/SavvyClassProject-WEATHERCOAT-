@@ -12,58 +12,7 @@
     <link rel="shortcut icon" href="./Images/WeatherCoatIcon.png" type="image/x-icon">
 </head>
 <body>
-    <header class="home_header">
-        <div id ='menu_bar'>
-            <img id="menu_button_icon" src="./images/menusun.png" alt="Menu Button">
-            <div class="menu_button home_button" onclick="home()">
-                <label class="visible_menu">
-                    <img src="./Images/home.png" alt="HOME"><br>
-                    HOME
-                </label>
-            </div>
-            <div class="menu_button" onclick="about()">
-                <label class="visible_menu">
-                    <img src="./Images/info.png" alt="ABOUT"><br>
-                    ABOUT
-                </label>
-            </div>
-            <div class="menu_button" onclick="openContact()">
-                <label class="visible_menu">
-                    <img src="./Images/contact.png" alt="CONTACT"><br>
-                    CONTACT
-                </label>
-            </div>
-            <div class="menu_button menu_last" onclick="weather()">
-                <label class="visible_menu">
-                    <img src="./Images/sun.png" alt="WEATHERCOAT"><br>
-                    WEATHER COAT
-                </label>
-            </div>
-        </div>
-    </header>
-    <main>
-        <iframe id="home_frame" src="./clouds.html" frameborder="0"></iframe>
-        <div id="contactme" class="contact">
-            <link rel="stylesheet" href="contact.css">
-            <form action="https://formspree.io/f/mnqyppyz" method="POST">
-                <header><h3>Contact Me</h3></header>
-                <label for="subject">Subject:</label>
-                <input id="subject" title="subject" placeholder="Email subject" required>
-                <label for="name">Name:</label>
-                <input id="name" placeholder="Your full name" required>
-                <label for="email">Email:</label>
-                <input type="email" id="email" pattern=".+@.+\..+?" placeholder="Your email" required>
-                <label for="message">Message:</label>
-                <textarea id="message" placeholder="Your message" required></textarea>
-                <footer>
-                    <button type="cancel" formnovalidate>Cancel</button>
-                    <button type="submit" onclick="submitContact()">Submit</button>
-                </footer>
-            </form>
-            <script src="./contact.js"></script>
-        </div>
-    </main>
-    <footer></footer>
+    <div id="root"></div>
     <script src="index.js"></script>
 </body>
 </html>

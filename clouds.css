@@ -1,22 +1,32 @@
 :root {
-    --pos:5%;
+    --pos:0%;
     font-family: 'Crimson Text', serif;
 }
 
-#cloud_left {
-    height: 50%;
+#title_text {
+    color: rgb(193, 193, 0);
+    font-size: 10vh;
+    position: absolute;
+    top:25vh;
+    width: 99vw;
+    text-align: center;
+}
+
+.cloud {
+    height: 50vh;
     position: fixed;
+    top: 25vh;
+    z-index: 1;
+}
+
+#cloud_left {
     transform: scaleX(-1);
-    top: 25%;
     left: var(--pos);
     transition-property: left;
     transition: left 1.5s ease-in-out;
 }
 
 #cloud_right {
-    height: 50%;
-    position: fixed;
-    top: 25%;
     right: var(--pos);
     transition-property: right;
     transition: right 1.5s ease-in-out;
@@ -31,11 +41,3 @@ html {
     max-width: 100vw;
 }
 
-H1 {
-    color: rgb(193, 193, 0);
-    font-size: 10vh;
-    position: absolute;
-    top:40vh;
-    width: 99vw;
-    text-align: center;
-}
