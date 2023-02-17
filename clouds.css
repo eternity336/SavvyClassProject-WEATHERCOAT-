@@ -1,0 +1,43 @@
+:root {
+    --pos:0%;
+    font-family: 'Crimson Text', serif;
+}
+
+#title_text {
+    color: rgb(193, 193, 0);
+    font-size: 10vh;
+    position: absolute;
+    top:25vh;
+    width: 99vw;
+    text-align: center;
+}
+
+.cloud {
+    height: 50vh;
+    position: fixed;
+    top: 25vh;
+    z-index: 1;
+}
+
+#cloud_left {
+    transform: scaleX(-1);
+    left: var(--pos);
+    transition-property: left;
+    transition: left 1.5s ease-in-out;
+}
+
+#cloud_right {
+    right: var(--pos);
+    transition-property: right;
+    transition: right 1.5s ease-in-out;
+}
+
+html:hover{
+    --pos: -75%;
+}
+
+html {
+    background-color: rgb(223, 255, 255);
+    max-width: 100vw;
+}
+
