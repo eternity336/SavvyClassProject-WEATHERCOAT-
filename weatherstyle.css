@@ -4,16 +4,15 @@
 }
   
 body {
-    height: 100vh;
     background-color: rgb(52, 49, 127);
 }
 
-#avatar_div{
-    height: 100%;
+html, body, .weather_view {
+    height: 100vh;
 }
 
 #avatar {
-    image-rendering: pixelated;
+    image-rendering: optimizeQuality;
 }
 
 .weather_view {
@@ -59,8 +58,8 @@ body {
 }
 
 .center_view canvas{
-    width: 400px;
-    height: 600px;
+    height: auto;
+    width: 40vw;
     border: 1px solid black;
     border-radius: 15px;
 }
@@ -85,8 +84,15 @@ body {
     justify-content: center;
 }
 
-@media (max-width: 750px) {
+@media (max-width: 1000px) {
     .weather_view{
         grid-template-columns:1fr;
+    }
+    .center_view{
+        order: 3;
+    }
+    .center_view canvas {
+        width: 663px;
+        height: 1145px;
     }
 }
