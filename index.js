@@ -3,6 +3,8 @@ import * as store from "./store";
 import Navigo from "navigo";
 import { capitalize } from "lodash";
 
+const router = new Navigo("/");
+
 function render(state = store.Home) {
   document.querySelector("#root").innerHTML = `
     ${Header(state)}
@@ -11,14 +13,11 @@ function render(state = store.Home) {
     ${Footer()}
   `;
   router.updatePageLinks();
-  console.log(state);
 }
 
-const router = new Navigo("/");
-router.on("/", () => render(store.Home)).resolve();
 router
   .on({
-    "/": () => render(),
+    "/": () => render(store.Home),
     ":view": params => {
       let view = capitalize(params.data.view);
       render(store[view]);
