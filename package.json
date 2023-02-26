@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "parcel-build": "parcel build index.html && cp _redirects ./dist/",
+    "parcel-build": "parcel build index.html",
     "serve": "parcel index.html"
   },
   "keywords": [],
