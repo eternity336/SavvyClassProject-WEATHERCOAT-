@@ -12,13 +12,13 @@
     <div class="weather_view">
         <div class="left_view">
             <div><p>Inspirational Message</p></div>
-            <div><p>Real Temp</p><p class="weather_nums">50&#176</p></div>
-            <div><p>Visibility</p><p class="weather_nums">50%</p></div>
+            <div><p>Real Temp</p><p id='realTemp' class="weather_nums"></p></div>
+            <div><p>Visibility</p><p id='visibility' class="weather_nums"></p></div>
         </div>
         <div class="center_view">
-            <div class="center_div"><p>Date</p></div>
-            <div class="center_div"><p>Time</p></div>
-            <div class="center_div"><p>Location</p></div>
+            <div class="center_div"><p id="weather_date">Date</p></div>
+            <div class="center_div"><p id="weather_time">Time</p></div>
+            <div class="center_div"><p id="weather_location">Location</p></div>
             <div class="avatar_div center_div">
                 <div class="alert"><span>ALERTS</span></div>
                 <canvas id='avatar' alt="Weather Avatar"></canvas>
@@ -42,11 +42,9 @@
                 <p>Day 3</p>
                 <p>Day 4</p>
                 <p>Day 5</p>
-                <p>Day 6</p>
-                <p>Day 7</p>
             </div>
-            <div><p>Real Feel Temp</p><p class="weather_nums">50&#176</p></div>
-            <div><p>Humidity</p><p class="weather_nums">50%</p></div>
+            <div><p>Real Feel Temp</p><p id='realFeel' class="weather_nums"></p></div>
+            <div><p>Humidity</p><p id='humidity' class="weather_nums"></p></div>
         </div>
     </div>
 </body>

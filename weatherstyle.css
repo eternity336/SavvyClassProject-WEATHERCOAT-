@@ -58,10 +58,10 @@ html, body, .weather_view {
 }
 
 .center_view canvas{
-    height: auto;
-    width: 40vw;
-    border: 1px solid black;
+    height: 80vh;
+    border: 3px solid black;
     border-radius: 15px;
+    aspect-ratio: .58/1;
 }
 
 .alert{

@@ -1,0 +1,10 @@
+{
+    'sunny':['sun_glasses'],
+    'summer':['sandals','tank_top', 'shorts', 'sun_glasses'],
+    'mid':['jeans','shoes', 'long_sleeves'],
+    'breeze':['shoes', 'jeans', 'light_jacket'],
+    'warm':['jeans','shoes', 'short_sleeves'],
+    'rain':['shoes', 'jeans', 'raincoat', 'umbrella'],
+    'cold':['shoes', 'jeans', 'sweater'],
+    'freezing':['shoes','wintercoat']
+}
