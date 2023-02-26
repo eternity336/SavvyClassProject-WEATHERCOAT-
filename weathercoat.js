@@ -91,7 +91,7 @@ function loadClothes() {
 function getWeather() {
   //Get the weather to define clothing
   fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.API_KEY}`
+    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.WEATHER_API}`
   )
     .then(response => response.json())
     .then(data => {
