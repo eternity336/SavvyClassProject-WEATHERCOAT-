@@ -1,35 +1,9 @@
 import dotenv from "dotenv";
 
+dotenv.config();
+
 let avatar = document.getElementsByName("player");
 let clothes;
-let IP = "";
-let latitude = 0;
-let longitude = 0;
-let city = "";
-let currentTemp = 0;
-let feelTemp = 0;
-let humidity = 0;
-let visibility = 0;
-
-const kelvinToFahrenheit = kelvinTemp =>
-  Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
-
-//This is the URL to pull from
-fetch("https://api.ipify.org?format=json")
-  //THis fetches the response
-  .then(response => response.json())
-  //This returns the users IP
-  .then(data => (IP = data.ip));
-
-fetch(`https://ipapi.co/${IP}/json/`)
-  .then(response => response.json())
-  .then(data => {
-    console.log(data, data.city);
-    latitude = data.latitude;
-    longitude = data.longitude;
-    city = data.city;
-    getWeather();
-  });
 
 fetch("./data/weathercoat_clothes.json")
   .then(response => response.json())
@@ -90,23 +64,20 @@ function loadClothes() {
 
 function getWeather() {
   //Get the weather to define clothing
-  fetch(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${process.env.WEATHER_API}`
-  )
+  fetch(`./weather`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
-      currentTemp = kelvinToFahrenheit(data.main.feels_like);
-      feelTemp = kelvinToFahrenheit(data.main.temp);
-      humidity = data.main.humidity;
-      visibility = data.visibility / (10000/100);
-      document.getElementById("humidity").innerText = humidity + "%";
-      document.getElementById("realFeel").innerText = feelTemp + "\xBAF";
-      document.getElementById("realTemp").innerText = currentTemp + "\xBAF";
-      document.getElementById("visibility").innerText = visibility + "%";
+      document.getElementById("humidity").innerText = data.humidity + "%";
+      document.getElementById("realFeel").innerText = data.feelTemp + "\xBAF";
+      document.getElementById("realTemp").innerText =
+        data.currentTemp + "\xBAF";
+      document.getElementById("visibility").innerText = data.visibility + "%";
       let date = new Date();
       document.getElementById("weather_date").innerText = date.toDateString();
       document.getElementById("weather_time").innerText = date.toTimeString();
-      document.getElementById("weather_location").innerText = `${city} (${latitude}. ${longitude})`;
+      document.getElementById(
+        "weather_location"
+      ).innerText = `${data.city} (${data.lat}. ${data.lon})`;
     });
 }
