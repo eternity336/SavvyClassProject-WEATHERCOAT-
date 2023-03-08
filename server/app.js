@@ -33,15 +33,13 @@ const kelvinToFahrenheit = kelvinTemp =>
 // TRY AXIOS!!!!
 // Handle the request with HTTP GET method from http://localhost:4040/weather
 app.get("/weather", async (request, response) => {
-  let IP = `${request.ip || request.socket.remoteAddress}`;
-  console.log("My IP: ", request.ips, request.ip, request.socket.remoteAddress);
-  // if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
-  //   response.json(await getLatLon("174.69.63.85"));
-  //   return;
-  // }
-  // console.log(request);
-  // response.json(await getLatLon(IP));
-  response.json({});
+  let IP = `${request.ip}`;
+  // console.log("My IP: ", request.ips, , request.socket.remoteAddress);
+  if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
+    response.json(await getLatLon("174.69.63.85"));
+    return;
+  }
+  response.json(await getLatLon(IP));
 });
 
 async function getLatLon(IP) {
