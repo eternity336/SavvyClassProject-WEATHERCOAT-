@@ -136,7 +136,7 @@ footer {
 }
 
 :root {
-    --pos:-10%;
+    --pos:-0%;
     font-family: 'Crimson Text', serif;
 }
 
@@ -147,6 +147,7 @@ footer {
     top:25vh;
     width: 99vw;
     text-align: center;
+    white-space: nowrap;
 }
 
 .cloud {

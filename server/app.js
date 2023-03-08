@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const request = require("request");
+const axios = require("axios");
 
 const app = express();
 dotenv.config();
@@ -11,53 +11,60 @@ app.use(express.json());
 const kelvinToFahrenheit = kelvinTemp =>
   Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
 
+// TRY AXIOS!!!!
 // Handle the request with HTTP GET method from http://localhost:4040/weather
 app.get("/weather", async (request, response) => {
   let IP = `${request.socket.remoteAddress}`;
   console.log("__" + IP + "__");
 
-  if (IP == "::1") {
+  if (IP == "::ffff:127.0.0.1") {
     console.log("LOOP");
-    let data = getLatLon("174.69.63.85");
-    response.json(data);
+    response.json(await getLatLon("174.69.63.85"));
     return;
   }
-  response.json(getLatLon());
+  response.json(await getLatLon());
 });
 
-function getLatLon(IP) {
-  request.get(`https://ipapi.co/${IP}/json/`, async (err, res, body) => {
-    console.log("getlatlon");
-    if (!err && res.statusCode == 200) {
-      let data = JSON.parse(body);
+async function getLatLon(IP) {
+  let weather_data = {};
+  return await axios
+    .get(`https://ipapi.co/${IP}/json/`)
+    .then(response => {
+      // Storing retrieved data in state
+      console.log(response.data);
+      let data = response.data;
       let lat = data.latitude;
       let lon = data.longitude;
       let city = data.city;
-      let weather_data = getWeather(lat, lon, city);
+      weather_data = getWeather(lat, lon, city);
+      console.log("get_lat_lon:", weather_data);
       return weather_data;
-    }
-  });
+    })
+    .catch(error => {
+      console.log("It puked", error);
+    });
 }
 
-function getWeather(lat, lon, city) {
-  request.post(
-    `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`,
-    async (err, res, body) => {
-      console.log("getweather");
-      if (!err && res.statusCode == 200) {
-        let data = JSON.parse(body);
-        return {
-          currentTemp: kelvinToFahrenheit(data.main.feels_like),
-          feelTemp: kelvinToFahrenheit(data.main.temp),
-          humidity: data.main.humidity,
-          visibility: data.visibility / (10000 / 100),
-          lat: lat,
-          lon: lon,
-          city: city
-        };
-      }
-    }
-  );
+async function getWeather(lat, lon, city) {
+  let weather_data = {};
+  return await axios
+    .post(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`
+    )
+    .then(response => {
+      let data = response.data;
+      weather_data = {
+        currentTemp: kelvinToFahrenheit(data.main.feels_like),
+        feelTemp: kelvinToFahrenheit(data.main.temp),
+        humidity: data.main.humidity,
+        visibility: data.visibility / (10000 / 100),
+        lat: lat,
+        lon: lon,
+        city: city
+      };
+      console.log("get_weather:", weather_data);
+      return weather_data;
+    });
 }
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));

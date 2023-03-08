@@ -5,7 +5,7 @@ dotenv.config();
 let avatar = document.getElementsByName("player");
 let clothes;
 
-fetch("./data/weathercoat_clothes.json")
+fetch(".:4040/data/weathercoat_clothes.json")
   .then(response => response.json())
   .then(json => (clothes = json));
 
@@ -64,7 +64,7 @@ function loadClothes() {
 
 function getWeather() {
   //Get the weather to define clothing
-  fetch(`./weather`)
+  fetch(`:4040./weather`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
