@@ -3,6 +3,7 @@ import * as store from "./store";
 import Navigo from "navigo";
 import { capitalize } from "lodash";
 import axios from "axios";
+import * as images from "./Images";
 
 const router = new Navigo("/");
 // let clothes;
@@ -68,10 +69,13 @@ function afterRender(state) {
     for (let radio of avatar) {
       radio.onclick = function() {
         console.log("Selected Avatar: ", this.id);
-        getImage(`./Images/${this.id}.png`, loadAvatar);
+        // getImage(`./Images/${this.id}.png`, loadAvatar);
+        getImage(images[this.id], loadAvatar);
+        // loadAvatar(images[this.id]);
       };
     }
-    getImage(`./Images/avatar1.png`, loadAvatar);
+    // getImage(`./Images/avatar1.png`, loadAvatar);
+    getImage(images[this.id], loadAvatar);
   }
 }
 
