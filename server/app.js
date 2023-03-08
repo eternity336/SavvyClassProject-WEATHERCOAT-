@@ -31,10 +31,8 @@ const kelvinToFahrenheit = kelvinTemp =>
 // Handle the request with HTTP GET method from http://localhost:4040/weather
 app.get("/weather", async (request, response) => {
   let IP = `${request.socket.remoteAddress}`;
-  console.log("__" + IP + "__");
-
-  if (["::ffff:127.0.0.1", "::1"].includes(IP)) {
-    console.log("LOOP");
+  console.log("My IP: ", IP);
+  if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
     response.json(await getLatLon("174.69.63.85"));
     return;
   }
@@ -47,13 +45,11 @@ async function getLatLon(IP) {
     .get(`https://ipapi.co/${IP}/json/`)
     .then(response => {
       // Storing retrieved data in state
-      // console.log(response.data);
       let data = response.data;
       let lat = data.latitude;
       let lon = data.longitude;
       let city = data.city;
       weather_data = getWeather(lat, lon, city);
-      // console.log("get_lat_lon:", weather_data);
       return weather_data;
     })
     .catch(error => {
@@ -78,7 +74,6 @@ async function getWeather(lat, lon, city) {
         lon: lon,
         city: city
       };
-      // console.log("get_weather:", weather_data);
       return weather_data;
     });
 }
