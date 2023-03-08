@@ -2,56 +2,25 @@ import { Header, Footer, Nav, Main } from "./components";
 import * as store from "./store";
 import Navigo from "navigo";
 import { capitalize } from "lodash";
-import dotenv from "dotenv";
+import axios from "axios";
 
-dotenv.config();
 const router = new Navigo("/");
-let avatar = document.getElementsByName("player");
-let clothes;
-
-function render(state = store.Home) {
-  document.querySelector("#root").innerHTML = `
-    ${Header(state)}
-    ${Nav()}
-    ${Main(state)}
-    ${Footer()}
-  `;
-  router.updatePageLinks();
-}
-
-router
-  .on({
-    "/": () => render(store.Home),
-    ":view": params => {
-      let view = capitalize(params.data.view);
-      render(store[view]);
-      if (view == "Weathercoat") {
-        getWeather();
-        // loadAvatar();
-      }
-    }
-  })
-  .resolve();
-
-// fetch("./data/weathercoat_clothes.json")
-//   .then(response => response.json())
-//   .then(json => (clothes = json));
+// let clothes;
 
 function getImage(src, nextFunc) {
   console.log("Get Image");
   let img = new Image();
-  img.onload = nextFunc;
+  img.addEventListener("load", () => {
+    console.log("loaded");
+    nextFunc(img);
+  });
+  img.addEventListener("error", err => {
+    console.log("error", err);
+  });
   img.src = src;
 }
 
-for (let radio of avatar) {
-  radio.onclick = function() {
-    console.log("Selected Avatar: ", this.id);
-    getImage(`./Images/${this.id}.png`, loadAvatar);
-  };
-}
-
-function loadAvatar(img) {
+function loadAvatar(img = this) {
   //This is just for loading the avatar.  It clears the canvas and adds the avatar
   console.log("Load Avatar", img, img.width, img.height);
   let av = document.getElementById("avatar");
@@ -74,17 +43,17 @@ function loadAvatar(img) {
   );
 }
 
-function loadClothes() {
+function loadClothes(img = this) {
   //This does not clear the screen.  This is for adding the layers of clothing to the avatar.
   let av = document.getElementById("avatar");
   let av_ctx = av.getContext("2d");
   av_ctx.imageSmoothingEnabled = false;
   av_ctx.drawImage(
-    this,
+    img,
     0,
     0,
-    this.width,
-    this.height,
+    img.width,
+    img.height,
     2,
     2,
     av.width - 4,
@@ -92,22 +61,80 @@ function loadClothes() {
   );
 }
 
-function getWeather() {
-  //Get the weather to define clothing
-  fetch(`${process.env.WEATHER_SERVER}/weather`)
-    .then(response => response.json())
-    .then(data => {
-      console.log("FETCH:", data);
-      document.getElementById("humidity").innerText = data.humidity + "%";
-      document.getElementById("realFeel").innerText = data.feelTemp + "\xBAF";
-      document.getElementById("realTemp").innerText =
-        data.currentTemp + "\xBAF";
-      document.getElementById("visibility").innerText = data.visibility + "%";
-      let date = new Date();
-      document.getElementById("weather_date").innerText = date.toDateString();
-      document.getElementById("weather_time").innerText = date.toTimeString();
-      document.getElementById(
-        "weather_location"
-      ).innerText = `${data.city} (${data.lat}. ${data.lon})`;
-    });
+function afterRender(state) {
+  // add menu toggle to bars icon in nav bar
+  if (state.view === "Weathercoat") {
+    let avatar = document.getElementsByName("player");
+    for (let radio of avatar) {
+      radio.onclick = function() {
+        console.log("Selected Avatar: ", this.id);
+        getImage(`./Images/${this.id}.png`, loadAvatar);
+      };
+    }
+    getImage(`./Images/avatar1.png`, loadAvatar);
+  }
 }
+
+function render(state = store.Home) {
+  document.querySelector("#root").innerHTML = `
+    ${Header(state)}
+    ${Nav()}
+    ${Main(state)}
+    ${Footer()}
+  `;
+  afterRender(state);
+  router.updatePageLinks();
+}
+
+router.hooks({
+  before: (done, params) => {
+    const view =
+      params && params.data && params.data.view
+        ? capitalize(params.data.view)
+        : "Home";
+    switch (view) {
+      case "Home":
+        done();
+        break;
+      case "About":
+        done();
+        break;
+      case "Contact":
+        done();
+        break;
+      case "Weathercoat":
+        axios
+          .get(`${process.env.WEATHER_SERVER}/weather`)
+          .then(response => {
+            // Storing retrieved data in state
+            let data = response.data;
+            store.Weathercoat.humidity = data.humidity + "%";
+            store.Weathercoat.realFeel = data.feelTemp + "\xBAF";
+            store.Weathercoat.realTemp = data.currentTemp + "\xBAF";
+            store.Weathercoat.visibility = data.visibility + "%";
+            let date = new Date();
+            store.Weathercoat.weather_date = date.toDateString();
+            store.Weathercoat.weather_time = date.toTimeString();
+            store.Weathercoat.weather_location = `${data.city} (${data.lat}. ${data.lon})`;
+            done();
+          })
+          .catch(error => {
+            console.log("It puked", error);
+            done();
+          });
+        break;
+      default:
+        done();
+    }
+  }
+});
+
+router
+  .on({
+    "/": () => render(store.Home),
+    ":view": params => {
+      let view = capitalize(params.data.view);
+      render(store[view]);
+    }
+  })
+  .resolve();

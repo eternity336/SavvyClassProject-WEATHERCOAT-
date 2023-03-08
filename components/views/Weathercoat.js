@@ -1,22 +1,38 @@
 import html from "html-literal";
-export default () => html`
+export default store => html`
   <section id="weathercoat">
     <div class="weather_view">
       <div class="left_view">
         <div><p>Inspirational Message</p></div>
         <div>
           <p>Real Temp</p>
-          <p id="realTemp" class="weather_nums"></p>
+          <p id="realTemp" class="weather_nums">
+            ${store.realTemp}
+          </p>
         </div>
         <div>
           <p>Visibility</p>
-          <p id="visibility" class="weather_nums"></p>
+          <p id="visibility" class="weather_nums">
+            ${store.visibility}
+          </p>
         </div>
       </div>
       <div class="center_view">
-        <div class="center_div"><p id="weather_date">Date</p></div>
-        <div class="center_div"><p id="weather_time">Time</p></div>
-        <div class="center_div"><p id="weather_location">Location</p></div>
+        <div class="center_div">
+          <p id="weather_date">
+            ${store.weather_date}
+          </p>
+        </div>
+        <div class="center_div">
+          <p id="weather_time">
+            ${store.weather_time}
+          </p>
+        </div>
+        <div class="center_div">
+          <p id="weather_location">
+            ${store.weather_location}
+          </p>
+        </div>
         <div class="avatar_div center_div">
           <div class="alert"><span>ALERTS</span></div>
           <canvas id="avatar" alt="Weather Avatar"></canvas>
@@ -43,11 +59,15 @@ export default () => html`
         </div>
         <div>
           <p>Real Feel Temp</p>
-          <p id="realFeel" class="weather_nums"></p>
+          <p id="realFeel" class="weather_nums">
+            ${store.realFeel}
+          </p>
         </div>
         <div>
           <p>Humidity</p>
-          <p id="humidity" class="weather_nums"></p>
+          <p id="humidity" class="weather_nums">
+            ${store.humidity}
+          </p>
         </div>
       </div>
     </div>
