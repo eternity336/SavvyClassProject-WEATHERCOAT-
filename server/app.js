@@ -36,7 +36,7 @@ app.get("/weather", async (request, response) => {
     response.json(await getLatLon("174.69.63.85"));
     return;
   }
-  response.json(await getLatLon());
+  response.json(await getLatLon(IP));
 });
 
 async function getLatLon(IP) {
