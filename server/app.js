@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const axios = require("axios");
+const { ClientRequest } = require("http");
 
 const app = express();
 dotenv.config();
@@ -18,9 +19,11 @@ const cors = (req, res, next) => {
     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
   );
   res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("X-Forwarded-For", req.ip);
   next();
 };
 
+app.set("trust proxy", "loopback, linklocal, uniquelocal");
 app.use(express.json());
 app.use(cors);
 
@@ -30,13 +33,15 @@ const kelvinToFahrenheit = kelvinTemp =>
 // TRY AXIOS!!!!
 // Handle the request with HTTP GET method from http://localhost:4040/weather
 app.get("/weather", async (request, response) => {
-  let IP = `${request.socket.remoteAddress}`;
-  console.log("My IP: ", IP);
-  if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
-    response.json(await getLatLon("174.69.63.85"));
-    return;
-  }
-  response.json(await getLatLon(IP));
+  let IP = `${request.ip || request.socket.remoteAddress}`;
+  console.log("My IP: ", request.ips, request.ip, request.socket.remoteAddress);
+  // if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
+  //   response.json(await getLatLon("174.69.63.85"));
+  //   return;
+  // }
+  // console.log(request);
+  // response.json(await getLatLon(IP));
+  response.json({});
 });
 
 async function getLatLon(IP) {
