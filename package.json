@@ -5,8 +5,7 @@
   "scripts": {
     "parcel-build": "parcel build index.html",
     "serve": "parcel --no-cache index.html",
-    "weather": "parcel --no-cache weathercoat.html",
-    "server": "nodemon --watch ./server -e js ./server/app.js"
+    "app:watch": "nodemon --watch ./server -e js ./server/app.js"
   },
   "keywords": [],
   "author": "TheeOx",
