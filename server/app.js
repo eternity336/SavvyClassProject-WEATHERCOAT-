@@ -4,9 +4,25 @@ const axios = require("axios");
 
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 4040;
+
+// CORS Middleware
+const cors = (req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "X-Requested-With,content-type, Accept,Authorization,Origin"
+  );
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  next();
+};
 
 app.use(express.json());
+app.use(cors);
 
 const kelvinToFahrenheit = kelvinTemp =>
   Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
@@ -17,7 +33,7 @@ app.get("/weather", async (request, response) => {
   let IP = `${request.socket.remoteAddress}`;
   console.log("__" + IP + "__");
 
-  if (IP == "::ffff:127.0.0.1") {
+  if (["::ffff:127.0.0.1", "::1"].includes(IP)) {
     console.log("LOOP");
     response.json(await getLatLon("174.69.63.85"));
     return;
@@ -31,17 +47,17 @@ async function getLatLon(IP) {
     .get(`https://ipapi.co/${IP}/json/`)
     .then(response => {
       // Storing retrieved data in state
-      console.log(response.data);
+      // console.log(response.data);
       let data = response.data;
       let lat = data.latitude;
       let lon = data.longitude;
       let city = data.city;
       weather_data = getWeather(lat, lon, city);
-      console.log("get_lat_lon:", weather_data);
+      // console.log("get_lat_lon:", weather_data);
       return weather_data;
     })
     .catch(error => {
-      console.log("It puked", error);
+      console.log("It puked [lat lon]", error);
     });
 }
 
@@ -62,7 +78,7 @@ async function getWeather(lat, lon, city) {
         lon: lon,
         city: city
       };
-      console.log("get_weather:", weather_data);
+      // console.log("get_weather:", weather_data);
       return weather_data;
     });
 }

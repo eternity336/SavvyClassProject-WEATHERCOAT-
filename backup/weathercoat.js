@@ -5,7 +5,7 @@ dotenv.config();
 let avatar = document.getElementsByName("player");
 let clothes;
 
-fetch(".:4040/data/weathercoat_clothes.json")
+fetch(`${process.env.WEATHER_SERVER}/data/weathercoat_clothes.json`)
   .then(response => response.json())
   .then(json => (clothes = json));
 
@@ -61,10 +61,10 @@ function loadClothes() {
     av.height - 4
   );
 }
-
+4
 function getWeather() {
   //Get the weather to define clothing
-  fetch(`:4040./weather`)
+  fetch(`${process.env.WEATHER_SERVER}/weather`)
     .then(response => response.json())
     .then(data => {
       console.log(data);
