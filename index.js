@@ -69,12 +69,9 @@ function afterRender(state) {
     for (let radio of avatar) {
       radio.onclick = function() {
         console.log("Selected Avatar: ", this.id);
-        // getImage(`./Images/${this.id}.png`, loadAvatar);
         getImage(images[this.id], loadAvatar);
-        // loadAvatar(images[this.id]);
       };
     }
-    // getImage(`./Images/avatar1.png`, loadAvatar);
     getImage(images["avatar1"], loadAvatar);
   }
 }
