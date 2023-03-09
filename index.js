@@ -75,7 +75,7 @@ function afterRender(state) {
       };
     }
     // getImage(`./Images/avatar1.png`, loadAvatar);
-    getImage(images[this.id], loadAvatar);
+    getImage(images["avatar1"], loadAvatar);
   }
 }
 
