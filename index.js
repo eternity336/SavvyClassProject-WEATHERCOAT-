@@ -62,17 +62,34 @@ function loadClothes(img = this) {
   );
 }
 
+function setCustomCity(form) {
+  console.log("clicked");
+  // return { city: form.city, state: form.state, country: form.country };
+}
+
 function afterRender(state) {
   // add menu toggle to bars icon in nav bar
   if (state.view === "Weathercoat") {
     let avatar = document.getElementsByName("player");
+
     for (let radio of avatar) {
       radio.onclick = function() {
-        console.log("Selected Avatar: ", this.id);
-        getImage(images[this.id], loadAvatar);
+        store.Weathercoat.avatar = this.id;
+        console.log("Selected Avatar: ", store.Weathercoat.avatar);
+        getImage(images[store.Weathercoat.avatar], loadAvatar);
       };
     }
-    getImage(images["avatar1"], loadAvatar);
+
+    document.getElementById("edit").addEventListener("click", () => {
+      setCustomCity();
+    });
+
+    Array.from(avatar, radio => {
+      if (radio.id == store.Weathercoat.avatar) {
+        radio.checked = true;
+      }
+    });
+    getImage(images[store.Weathercoat.avatar], loadAvatar);
   }
 }
 
@@ -86,6 +103,29 @@ function render(state = store.Home) {
   afterRender(state);
   router.updatePageLinks();
 }
+
+function loadDateTime() {
+  let date = new Date();
+  store.Weathercoat.weather_date = date.toDateString();
+  store.Weathercoat.weather_time = date.toTimeString();
+}
+
+function setWeatherData(data) {
+  store.Weathercoat.humidity = `${data.humidity}%`;
+  store.Weathercoat.realFeel = `${data.feelTemp}\xBAF`;
+  store.Weathercoat.realTemp = `${data.currentTemp}\xBAF`;
+  store.Weathercoat.visibility = `${data.visibility}%`;
+  store.Weathercoat.weather_location = `${data.city} (${data.lat}. ${data.lon})`;
+  loadDateTime();
+}
+
+// function clearWeatherData(){
+//   store.Weathercoat.humidity = "";
+//   store.Weathercoat.realFeel = "";
+//   store.Weathercoat.realTemp = "";
+//   store.Weathercoat.visibility = "";
+//   store.Weathercoat.weather_location = "";
+// }
 
 router.hooks({
   before: (done, params) => {
@@ -104,25 +144,38 @@ router.hooks({
         done();
         break;
       case "Weathercoat":
-        axios
-          .get(`${process.env.WEATHER_SERVER}/weather`)
-          .then(response => {
-            // Storing retrieved data in state
-            let data = response.data;
-            store.Weathercoat.humidity = data.humidity + "%";
-            store.Weathercoat.realFeel = data.feelTemp + "\xBAF";
-            store.Weathercoat.realTemp = data.currentTemp + "\xBAF";
-            store.Weathercoat.visibility = data.visibility + "%";
-            let date = new Date();
-            store.Weathercoat.weather_date = date.toDateString();
-            store.Weathercoat.weather_time = date.toTimeString();
-            store.Weathercoat.weather_location = `${data.city} (${data.lat}. ${data.lon})`;
-            done();
-          })
-          .catch(error => {
-            console.log("It puked", error);
-            done();
-          });
+        if (!store.Weathercoat.weather_location) {
+          Promise.all([
+            axios
+              .get(`${process.env.WEATHER_SERVER}/weather`)
+              .then(response => {
+                // Storing retrieved data in state
+                setWeatherData(response.data);
+              })
+              .catch(error => {
+                console.log("It puked on weather", error);
+              }),
+            axios
+              .get("https://api.goprogram.ai/inspiration")
+              .then(response => {
+                // Storing retrieved data in state
+                console.log(response.headers);
+                let data = response.data;
+                store.Weathercoat.quote = `'${data.quote}'`;
+                store.Weathercoat.author = `- ${data.author}`;
+              })
+              .catch(error => {
+                console.log("It puked on inspiration", error);
+              })
+          ])
+            .then(() => done())
+            .catch(error => {
+              console.log("Promise broken", error);
+              done();
+            });
+        } else {
+          done();
+        }
         break;
       default:
         done();

@@ -1,17 +1,24 @@
 import html from "html-literal";
+import edit from "../../Images/edit.png";
 export default store => html`
   <section id="weathercoat">
     <div class="weather_view">
       <div class="left_view">
-        <div><p>Inspirational Message</p></div>
         <div>
-          <p>Real Temp</p>
+          <p class="weather_sub_title">Inspirational Message</p>
+          <br />
+          <p id="inspiration_quote">${store.quote}</p>
+          <br />
+          <p id="inspiration_author">${store.author}</p>
+        </div>
+        <div>
+          <p class="weather_sub_title">Real Temp</p>
           <p id="realTemp" class="weather_nums">
             ${store.realTemp}
           </p>
         </div>
         <div>
-          <p>Visibility</p>
+          <p class="weather_sub_title">Visibility</p>
           <p id="visibility" class="weather_nums">
             ${store.visibility}
           </p>
@@ -29,9 +36,11 @@ export default store => html`
           </p>
         </div>
         <div class="center_div">
-          <p id="weather_location">
+          <img id="weather_location">
             ${store.weather_location}
+            <img id="edit" src="${edit}" width="20px" alt="edit"/>
           </p>
+          
         </div>
         <div class="avatar_div center_div">
           <div class="alert"><span>ALERTS</span></div>
@@ -50,7 +59,7 @@ export default store => html`
       </div>
       <div class="right_view">
         <div>
-          <p>7 Day Forecast</p>
+          <p class="weather_sub_title">7 Day Forecast</p>
           <p>Today</p>
           <p>Day 2</p>
           <p>Day 3</p>
@@ -58,13 +67,13 @@ export default store => html`
           <p>Day 5</p>
         </div>
         <div>
-          <p>Real Feel Temp</p>
+          <p class="weather_sub_title">Real Feel Temp</p>
           <p id="realFeel" class="weather_nums">
             ${store.realFeel}
           </p>
         </div>
         <div>
-          <p>Humidity</p>
+          <p class="weather_sub_title">Humidity</p>
           <p id="humidity" class="weather_nums">
             ${store.humidity}
           </p>
