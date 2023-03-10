@@ -1,0 +1,28 @@
+{
+  coord: { lon: -87.217, lat: 30.4199 },
+  weather: [ { id: 701, main: 'Mist', description: 'mist', icon: '50n' } ],
+  base: 'stations',
+  main: {
+    temp: 294.92,
+    feels_like: 295.58,
+    temp_min: 293.69,
+    temp_max: 295.85,
+    pressure: 1016,
+    humidity: 93
+  },
+  visibility: 10000,
+  wind: { speed: 4.12, deg: 170 },
+  clouds: { all: 100 },
+  dt: 1678411877,
+  sys: {
+    type: 2,
+    id: 2038696,
+    country: 'US',
+    sunrise: 1678363581,
+    sunset: 1678405967
+  },
+  timezone: -21600,
+  id: 4168228,
+  name: 'Pensacola',
+  cod: 200
+}

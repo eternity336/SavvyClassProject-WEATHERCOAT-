@@ -1,4 +1,10 @@
 export default {
   header: "My Weathercoat Page",
-  view: "Weathercoat"
+  view: "Weathercoat",
+  humidity: "",
+  realFeel: "",
+  realTemp: "",
+  visibility: "",
+  weather_location: "",
+  avatar: "avatar1"
 };

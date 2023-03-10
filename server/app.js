@@ -29,24 +29,56 @@ app.use(cors);
 const kelvinToFahrenheit = kelvinTemp =>
   Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
 
-// TRY AXIOS!!!!
 // Handle the request with HTTP GET method from http://localhost:4040/weather
 app.get("/weather", async (request, response) => {
   let IP = `${(request.header("x-forwarded-for") || request.ip).split(",")[0]}`;
-  console.log(
-    "My IP: ",
-    IP,
-    request.ips,
-    request.ip,
-    request.socket.remoteAddress,
-    request.header("x-forwarded-for")
-  );
+  // console.log(
+  //   "My IP: ",
+  //   IP,
+  //   request.ips,
+  //   request.ip,
+  //   request.socket.remoteAddress,
+  //   request.header("x-forwarded-for")
+  // );
   if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
     response.json(await getLatLon("174.69.63.85"));
     return;
   }
   response.json(await getLatLon(IP));
 });
+
+app.get("/customweather", async (request, response) => {
+  // let IP = `${(request.header("x-forwarded-for") || request.ip).split(",")[0]}`;
+  let data = request.body;
+  let city = data.city;
+  let state = data.state;
+  let country = data.country;
+  response.json(await getLatLonByCity(city, state, country));
+});
+
+async function getLatLonByCity(city, state, country) {
+  let weather_data = {};
+  if (state) {
+    state = `&state=${state}`;
+  }
+  return await axios
+    .get(
+      `https://api.api-ninjas.com/v1/geocoding?city=${city}${state}&country=${country}`,
+      { headers: { "X-Api-Key": "nNF8CwcsuVqRD5/fwmdxIg==vAB2FHpFJpQHxXVm" } }
+    )
+    .then(response => {
+      // Storing retrieved data in state
+      let data = response.data[0];
+      let lat = data.latitude;
+      let lon = data.longitude;
+      let city = data.name;
+      weather_data = getWeather(lat, lon, city);
+      return weather_data;
+    })
+    .catch(error => {
+      console.log("It puked on custom [lat lon]", error);
+    });
+}
 
 async function getLatLon(IP) {
   let weather_data = {};
@@ -74,6 +106,7 @@ async function getWeather(lat, lon, city) {
     )
     .then(response => {
       let data = response.data;
+      console.log(data);
       weather_data = {
         currentTemp: kelvinToFahrenheit(data.main.feels_like),
         feelTemp: kelvinToFahrenheit(data.main.temp),

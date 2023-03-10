@@ -182,6 +182,18 @@ html:hover{
 }
 
 /* Weathercoat Styles */
+#inspiration_quote {
+    font-style:italic;
+}
+
+#inspiration_author {
+    text-align: right;
+    margin-right: 20px;
+}
+
+.weather_sub_title {
+    font-weight: bolder;
+}
 
 .weather_view {
     top: 15vh;
@@ -196,7 +208,7 @@ html:hover{
 }
 
 .weather_nums {
-    font-size: 10vw;
+    font-size: 6vw;
 }
 
 .left_view {
