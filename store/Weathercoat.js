@@ -5,6 +5,14 @@ export default {
   realFeel: "",
   realTemp: "",
   visibility: "",
+  today_icon: "",
+  alert: "",
+  restOfDays:{},
   weather_location: "",
-  avatar: "avatar1"
+  weather_city: "",
+  weather_state: "",
+  weather_country: "",
+  avatar: "avatar1",
+  lat: "",
+  lon: ""
 };
