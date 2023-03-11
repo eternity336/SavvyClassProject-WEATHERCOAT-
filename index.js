@@ -153,6 +153,7 @@ function setCustomCity() {
     store.Weathercoat.weather_state = state.value;
     store.Weathercoat.weather_country = country.value;
     form.remove();
+    router.navigate("/weathercoat");
   });
 }
 
@@ -224,6 +225,7 @@ router.hooks({
       params && params.data && params.data.view
         ? capitalize(params.data.view)
         : "Home";
+    const weathercoat_links = [];
     switch (view) {
       case "Home":
         done();
@@ -235,7 +237,8 @@ router.hooks({
         done();
         break;
       case "Weathercoat":
-        const weathercoat_links = [
+        console.log("Weathercoat");
+        weathercoat_links.push(
           axios.get(`${process.env.WEATHER_SERVER}/weather`, {
             params: {
               city: store.Weathercoat.weather_city,
@@ -243,7 +246,7 @@ router.hooks({
               country: store.Weathercoat.weather_country
             }
           })
-        ];
+        );
 
         if (!store.Weathercoat.quote) {
           weathercoat_links.push(
@@ -271,6 +274,14 @@ router.hooks({
       default:
         done();
     }
+  },
+  already: params => {
+    const view =
+      params && params.data && params.data.view
+        ? capitalize(params.data.view)
+        : "Home";
+
+    render(store[view]);
   }
 });
 

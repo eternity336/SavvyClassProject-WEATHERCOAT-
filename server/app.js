@@ -34,7 +34,7 @@ const kelvinToFahrenheit = kelvinTemp =>
 app.get("/weather", async (request, response) => {
   let IP = `${(request.header("x-forwarded-for") || request.ip).split(",")[0]}`;
   let data = request.query;
-  // console.log("REQ: (weather)", data);
+  console.log("REQ: (weather)", data);
   if (data) {
     let city = data.city;
     let state = data.state;
