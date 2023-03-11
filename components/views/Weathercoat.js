@@ -5,23 +5,25 @@ export default store => html`
     <div class="weather_view">
       <div class="left_view">
         <div>
-          <p class="weather_sub_title">Inspirational Message</p>
-          <br />
-          <p id="inspiration_quote">${store.quote}</p>
-          <br />
-          <p id="inspiration_author">${store.author}</p>
-        </div>
-        <div>
           <p class="weather_sub_title">Real Temp</p>
           <p id="realTemp" class="weather_nums">
             ${store.realTemp}
+            <img src = "https://openweathermap.org/img/wn/${store.today_icon}.png" alt="${store.today_icon}" width="100%"></img>
           </p>
+          
         </div>
         <div>
           <p class="weather_sub_title">Visibility</p>
           <p id="visibility" class="weather_nums">
             ${store.visibility}
           </p>
+        </div>
+        <div>
+          <p class="weather_sub_title">Inspirational Message</p>
+          <br />
+          <p id="inspiration_quote">${store.quote}</p>
+          <br />
+          <p id="inspiration_author">${store.author}</p>
         </div>
       </div>
       <div class="center_view">
@@ -43,7 +45,7 @@ export default store => html`
           
         </div>
         <div class="avatar_div center_div">
-          <div class="alert"><span>ALERTS</span></div>
+          <div class="alert"><span>${store.alert}</span></div>
           <canvas id="avatar" alt="Weather Avatar"></canvas>
           <div>
             <input type="radio" name="player" id="avatar1" checked />
@@ -58,21 +60,41 @@ export default store => html`
         </div>
       </div>
       <div class="right_view">
-        <div>
-          <p class="weather_sub_title">7 Day Forecast</p>
-          <p>Today</p>
-          <p>Day 2</p>
-          <p>Day 3</p>
-          <p>Day 4</p>
-          <p>Day 5</p>
+        <div class="forecast">
+          <p class="weather_sub_title">5 Day Forecast</p>
+          <div class="forecast_div">
+            <p class="forecast_date">${store.restOfDays[0].date}</p>
+            <p class="forecast_temp">${store.restOfDays[0].temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[0].icon}.png" alt="${store.restOfDays[0].icon}"></img>
+          </div>
+          <div class="forecast_div">
+            <p class="forecast_date">${store.restOfDays[1].date}</p>
+            <p class="forecast_temp">${store.restOfDays[1].temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[1].icon}.png" alt="${store.restOfDays[1].icon}"></img>
+          </div>
+          <div class="forecast_div">
+            <p class="forecast_date">${store.restOfDays[2].date}</p>
+            <p class="forecast_temp">${store.restOfDays[2].temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[2].icon}.png" alt="${store.restOfDays[2].icon}"></img>
+          </div>
+          <div class="forecast_div">
+            <p class="forecast_date">${store.restOfDays[3].date}</p>
+            <p class="forecast_temp">${store.restOfDays[3].temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[3].icon}.png" alt="${store.restOfDays[3].icon}"></img>
+          </div>
+          <div class="forecast_div">
+            <p class="forecast_date">${store.restOfDays[4].date}</p>
+            <p class="forecast_temp">${store.restOfDays[4].temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[4].icon}.png" alt="${store.restOfDays[4].icon}"></img>
+          </div>
         </div>
-        <div>
+        <div class="right_div">
           <p class="weather_sub_title">Real Feel Temp</p>
           <p id="realFeel" class="weather_nums">
             ${store.realFeel}
           </p>
         </div>
-        <div>
+        <div class="right_div">
           <p class="weather_sub_title">Humidity</p>
           <p id="humidity" class="weather_nums">
             ${store.humidity}
