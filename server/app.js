@@ -44,7 +44,7 @@ app.get("/weather", async (request, response) => {
       return;
     }
   }
-  
+
   if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
     response.json(await getLatLon("174.69.63.85"));
     return;
@@ -64,7 +64,6 @@ app.get("/customweather", async (request, response) => {
 
 async function getLatLonByCity(city, state, country) {
   //Function for getting the lat/lon needed for weather based on city information
-  let weather_data = {};
   let _state = "";
   if (state) {
     _state = `&state=${state}`;
@@ -77,27 +76,25 @@ async function getLatLonByCity(city, state, country) {
     .then(response => {
       // Storing retrieved data in state
       let data = response.data[0];
-      console.log(data);
-      if (data){
+      if (data) {
         let lat = data.latitude;
         let lon = data.longitude;
         let city = data.name;
-        if (data.country == 'US'){
+        if (data.country == "US") {
           state = data.state;
         }
         return getWeather(lat, lon, city, state, country);
       }
-      return {}
+      return { error: "Not a location!" };
     })
     .catch(error => {
       console.log("It puked on custom [lat lon]", error);
-      return {};
+      return { error: "Sorry wasn't able to find your location.  Try again." };
     });
 }
 
 async function getLatLon(IP) {
   //function used to get lat/lon needed for weather based on IP information
-  let weather_data = {};
   return await axios
     .get(`https://ipapi.co/${IP}/json/`)
     .then(response => {
@@ -106,31 +103,40 @@ async function getLatLon(IP) {
       let lat = data.latitude;
       let lon = data.longitude;
       let city = data.city;
-      let state = ""
+      let state = "";
       let country = data.country_code;
-      if (country == 'US'){
+      if (country == "US") {
         state = data.region_code;
       }
       return getWeather(lat, lon, city, state, country);
     })
     .catch(error => {
       console.log("It puked [lat lon]", error);
-      return {};
+      return { error: "Need a location!" };
     });
 }
 
-function formatWeather(weather, lat, lon, city, state, country){
+function formatWeather(weather, lat, lon, city, state, country) {
   //Sets up weather data for return
-  let today = weather[0]
-  let today_date = new Date().toISOString().split("T")[0];
-  let restOfDays = weather.filter(data => data.dt_txt.split(" ")[1] == "12:00:00" ).map(item => { return { "date": item.dt_txt.split(" ")[0], "temp": kelvinToFahrenheit(item.main.temp), "icon": item.weather[0].icon}; } );
+  let today = weather[0];
+  let restOfDays = weather
+    .filter(data => data.dt_txt.split(" ")[1] == "12:00:00")
+    .map(item => {
+      return {
+        date: item.dt_txt.split(" ")[0],
+        temp: kelvinToFahrenheit(item.main.temp),
+        icon: item.weather[0].icon
+      };
+    });
   return {
     currentTemp: kelvinToFahrenheit(today.main.temp),
     feelTemp: kelvinToFahrenheit(today.main.feels_like),
     humidity: today.main.humidity,
     visibility: today.visibility / (10000 / 100),
     today_icon: today.weather[0].icon,
-    alert: today.weather.map(data => {return data.description}),
+    alert: today.weather.map(data => {
+      return data.description;
+    }),
     restOfDays: restOfDays,
     lat: lat,
     lon: lon,
@@ -140,18 +146,17 @@ function formatWeather(weather, lat, lon, city, state, country){
   };
 }
 
-async function getWeather(lat, lon, city, state ,country) {
-  let weather_data = {};
+async function getWeather(lat, lon, city, state, country) {
   return await axios
     .post(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`
     )
     .then(response => {
-      return formatWeather(response.data.list, lat, lon, city, state ,country);
+      return formatWeather(response.data.list, lat, lon, city, state, country);
     })
     .catch(error => {
       console.log("Get Weather: ", error);
-      return {};
+      return { error: "Sorry wasn't able to find weather for your location." };
     });
 }
 

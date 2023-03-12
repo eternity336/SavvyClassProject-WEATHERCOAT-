@@ -47,10 +47,9 @@ const weatherTestData = {
 
 function getImage(src, nextFunc) {
   //universal function for adding images to the canvas.
-  console.log("Get Image");
+  // console.log("Get Image");
   let img = new Image();
   img.addEventListener("load", () => {
-    console.log("loaded");
     nextFunc(img);
   });
   img.addEventListener("error", err => {
@@ -61,7 +60,7 @@ function getImage(src, nextFunc) {
 
 function loadAvatar(img = this) {
   //This is just for loading the avatar.  It clears the canvas and adds the avatar
-  console.log("Load Avatar", img, img.width, img.height);
+  // console.log("Load Avatar", img, img.width, img.height);
   let av = document.getElementById("avatar");
   let av_ctx = av.getContext("2d");
   av_ctx.imageSmoothingEnabled = false;
@@ -110,10 +109,12 @@ function setCustomCity() {
   city.id = "city";
   city.name = "city";
   city.placeholder = "city";
+  city.pattern = "[a-zA-Z]+?";
   city.required = true;
   let state = document.createElement("input");
   state.id = "state";
   state.name = "state";
+  state.pattern = "[a-zA-Z]+?";
   state.placeholder = "State (Optional) for US Only";
   let country = document.createElement("select");
   country.id = "country";
@@ -127,7 +128,6 @@ function setCustomCity() {
   submit.innerText = "Submit";
   form.method = "POST";
   form.action = "";
-  form.style = "position: absolute; width: 300px; height: 400px;";
   form.append(header);
   form.append(city);
   form.append(state);
@@ -225,7 +225,7 @@ router.hooks({
       params && params.data && params.data.view
         ? capitalize(params.data.view)
         : "Home";
-    const weathercoat_links = [];
+    let weathercoat_links = [];
     switch (view) {
       case "Home":
         done();
@@ -255,8 +255,12 @@ router.hooks({
         }
         Promise.allSettled(weathercoat_links)
           .then(responses => {
-            console.log("responses", responses);
             let weatherResponse = responses[0].value;
+            console.log(weatherResponse.data);
+            if (weatherResponse.data.error) {
+              alert(weatherResponse.data.error);
+              done();
+            }
             setWeatherData(weatherResponse.data);
             if (responses.length > 1) {
               let inspirationResponse = responses[1].value;
@@ -280,8 +284,49 @@ router.hooks({
       params && params.data && params.data.view
         ? capitalize(params.data.view)
         : "Home";
+    console.log("already", view);
+    let weathercoat_links = [];
+    if (view == "Weathercoat") {
+      console.log("Weathercoat already");
+      weathercoat_links.push(
+        axios.get(`${process.env.WEATHER_SERVER}/weather`, {
+          params: {
+            city: store.Weathercoat.weather_city,
+            state: store.Weathercoat.weather_state,
+            country: store.Weathercoat.weather_country
+          }
+        })
+      );
 
-    render(store[view]);
+      if (!store.Weathercoat.quote) {
+        weathercoat_links.push(
+          axios.get("https://api.goprogram.ai/inspiration")
+        );
+      }
+      Promise.allSettled(weathercoat_links)
+        .then(responses => {
+          console.log("responses", responses);
+          let weatherResponse = responses[0].value;
+          console.log(weatherResponse.data);
+          if (weatherResponse.data.error) {
+            alert(weatherResponse.data.error);
+            render(store.Weathercoat);
+          }
+          setWeatherData(weatherResponse.data);
+          if (responses.length > 1) {
+            let inspirationResponse = responses[1].value;
+            store.Weathercoat.quote = `'${inspirationResponse.data.quote}'`;
+            store.Weathercoat.author = `- ${inspirationResponse.data.author}`;
+          }
+          render(store.Weathercoat);
+        })
+        .catch(error => {
+          console.log("Promise broken", error);
+          render(store.Weathercoat);
+        });
+    } else {
+      render(store[view]);
+    }
   }
 });
 

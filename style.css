@@ -1,6 +1,10 @@
 * {
     margin: 0;
     padding: 0;
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box; 
+    box-sizing:content-box;
 }
 
 body {
@@ -303,6 +307,17 @@ html:hover{
     font-weight: bolder;
 }
 
+#custom_location {
+    position: fixed;
+    top: 20vh;
+    width: 60%;
+}
+
+#custom_location header, #city, #state, #country {
+    padding: 1%;
+    margin: 1%;
+}
+
 /* @media (max-width: 600px) {
     
 } */
@@ -348,6 +363,12 @@ html:hover{
         aspect-ratio: .58/1;
         width: 58vw;
         height: 100vw;
+    }
+
+    #custom_location {
+        position: fixed;
+        top: 15vh;
+        width: 94%;
     }
 }
 
