@@ -101,7 +101,6 @@ function loadClothes(img = this) {
 
 function setCustomCity() {
   //Loads form to allow user to change the default location lookup.
-  console.log("clicked");
   let form = document.createElement("form");
   form.id = "custom_location";
   let header = document.createElement("header");
@@ -237,7 +236,6 @@ router.hooks({
         done();
         break;
       case "Weathercoat":
-        console.log("Weathercoat");
         weathercoat_links.push(
           axios.get(`${process.env.WEATHER_SERVER}/weather`, {
             params: {
@@ -256,7 +254,6 @@ router.hooks({
         Promise.allSettled(weathercoat_links)
           .then(responses => {
             let weatherResponse = responses[0].value;
-            console.log(weatherResponse.data);
             if (weatherResponse.data.error) {
               alert(weatherResponse.data.error);
               done();
@@ -284,10 +281,8 @@ router.hooks({
       params && params.data && params.data.view
         ? capitalize(params.data.view)
         : "Home";
-    console.log("already", view);
     let weathercoat_links = [];
     if (view == "Weathercoat") {
-      console.log("Weathercoat already");
       weathercoat_links.push(
         axios.get(`${process.env.WEATHER_SERVER}/weather`, {
           params: {
@@ -305,9 +300,7 @@ router.hooks({
       }
       Promise.allSettled(weathercoat_links)
         .then(responses => {
-          console.log("responses", responses);
           let weatherResponse = responses[0].value;
-          console.log(weatherResponse.data);
           if (weatherResponse.data.error) {
             alert(weatherResponse.data.error);
             render(store.Weathercoat);

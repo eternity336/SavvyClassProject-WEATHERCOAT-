@@ -34,7 +34,6 @@ const kelvinToFahrenheit = kelvinTemp =>
 app.get("/weather", async (request, response) => {
   let IP = `${(request.header("x-forwarded-for") || request.ip).split(",")[0]}`;
   let data = request.query;
-  console.log("REQ: (weather)", data);
   if (data) {
     let city = data.city;
     let state = data.state;
@@ -50,16 +49,6 @@ app.get("/weather", async (request, response) => {
     return;
   }
   response.json(await getLatLon(IP));
-});
-
-app.get("/customweather", async (request, response) => {
-  // let IP = `${(request.header("x-forwarded-for") || request.ip).split(",")[0]}`;
-  let data = request.query;
-  // console.log("REQ: (custom)", data);
-  let city = data.city;
-  let state = data.state;
-  let country = data.country;
-  response.json(await getLatLonByCity(city, state, country));
 });
 
 async function getLatLonByCity(city, state, country) {
