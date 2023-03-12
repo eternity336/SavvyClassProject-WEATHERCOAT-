@@ -14,5 +14,6 @@ export default {
   weather_country: "",
   avatar: "avatar1",
   lat: "",
-  lon: ""
+  lon: "",
+  error: ""
 };
