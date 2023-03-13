@@ -62,7 +62,7 @@ async function getLatLonByCity(city, state, country) {
       `https://api.api-ninjas.com/v1/geocoding?city=${city}${_state}&country=${country}`,
       { headers: { "X-Api-Key": "nNF8CwcsuVqRD5/fwmdxIg==vAB2FHpFJpQHxXVm" } }
     )
-    .then(response => {
+    .then(async response => {
       // Storing retrieved data in state
       let data = response.data[0];
       if (data) {
@@ -72,7 +72,7 @@ async function getLatLonByCity(city, state, country) {
         if (data.country == "US") {
           state = data.state;
         }
-        return getWeather(lat, lon, city, state, country);
+        return await getWeather(lat, lon, city, state, country);
       }
       return { error: "Not a location!" };
     })
@@ -123,9 +123,14 @@ function formatWeather(weather, lat, lon, city, state, country) {
     humidity: today.main.humidity,
     visibility: today.visibility / (10000 / 100),
     today_icon: today.weather[0].icon,
-    alert: today.weather.map(data => {
-      return data.description;
-    }),
+    wind_speed: today.wind.speed,
+    wind_gust: today.wind.gust,
+    wind_direction: today.wind.deg,
+    alert: today.weather
+      .map(data => {
+        return data.description;
+      })
+      .join(", "),
     restOfDays: restOfDays,
     lat: lat,
     lon: lon,
