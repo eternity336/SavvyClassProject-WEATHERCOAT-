@@ -175,9 +175,10 @@ footer {
     transition: right 1.5s ease-in-out;
 }
 
-html:hover{
+section:hover {
     --pos: -200%;
 }
+
 
 #clouds_home {
     background-color: rgb(223, 255, 255);
