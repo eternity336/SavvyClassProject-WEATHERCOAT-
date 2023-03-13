@@ -10,7 +10,13 @@ export default {
   wind_speed: "",
   wind_gust: "",
   alert: "",
-  restOfDays: {},
+  restOfDays: [
+    { date: "", temp: "", icon: "" },
+    { date: "", temp: "", icon: "" },
+    { date: "", temp: "", icon: "" },
+    { date: "", temp: "", icon: "" },
+    { date: "", temp: "", icon: "" }
+  ],
   forecast_day1: { date: "", temp: "", icon: "" },
   forecast_day2: { date: "", temp: "", icon: "" },
   forecast_day3: { date: "", temp: "", icon: "" },
