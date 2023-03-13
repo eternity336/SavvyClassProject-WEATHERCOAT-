@@ -3,64 +3,9 @@ import * as store from "./store";
 import Navigo from "navigo";
 import { capitalize } from "lodash";
 import axios from "axios";
-import * as images from "./Images";
 import countries from "./data/countries.json";
 
 const router = new Navigo("/");
-
-// function getImage(src, nextFunc) {
-//   //universal function for adding images to the canvas.
-//   // console.log("Get Image");
-//   let img = new Image();
-//   img.addEventListener("load", () => {
-//     nextFunc(img);
-//   });
-//   img.addEventListener("error", err => {
-//     console.log("error", err);
-//   });
-//   img.src = src;
-// }
-
-// function loadAvatar(img = this) {
-//   //This is just for loading the avatar.  It clears the canvas and adds the avatar
-//   // console.log("Load Avatar", img, img.width, img.height);
-//   let av = document.getElementById("avatar");
-//   let av_ctx = av.getContext("2d");
-//   av_ctx.imageSmoothingEnabled = false;
-//   av_ctx.beginPath();
-//   av_ctx.rect(0, 0, av.width, av.height);
-//   av_ctx.fillStyle = "lightblue";
-//   av_ctx.fill();
-//   av_ctx.drawImage(
-//     img,
-//     0,
-//     0,
-//     img.width,
-//     img.height,
-//     5,
-//     5,
-//     av.width - 10,
-//     av.height - 10
-//   );
-// }
-
-// function loadClothes(img = this) {
-//   //This will not clear the canvas.  This is for adding the layers of clothing to the avatar.
-//   let av = document.getElementById("avatar");
-//   let av_ctx = av.getContext("2d");
-//   av_ctx.imageSmoothingEnabled = false;
-//   av_ctx.drawImage(
-//     img,
-//     0,
-//     0,
-//     img.width,
-//     img.height,
-//     2,
-//     2,
-//     av.width - 4,
-//     av.height - 4
-//   );
-// }
 
 function chooseClothes(data) {
   if (data.alert.includes("rain")) {
@@ -132,6 +77,8 @@ function setCustomCity() {
     store.Weathercoat.weather_city = city.value;
     store.Weathercoat.weather_state = state.value;
     store.Weathercoat.weather_country = country.value;
+    store.Weathercoat.lat = "";
+    store.Weathercoat.lon = "";
     form.remove();
     router.navigate("/weathercoat");
   });
@@ -147,7 +94,6 @@ function afterRender(state) {
         store.Weathercoat.avatar = this.id;
         console.log("Selected Avatar: ", store.Weathercoat.avatar);
         router.navigate("/weathercoat");
-        // getImage(images[store.Weathercoat.avatar], loadAvatar);
       };
     }
 
@@ -160,8 +106,6 @@ function afterRender(state) {
         radio.checked = true;
       }
     });
-    // router.navigate("/weathercoat");
-    // getImage(images[store.Weathercoat.avatar], loadAvatar);
   }
 }
 
@@ -194,17 +138,22 @@ function setWeatherData(data) {
   store.Weathercoat.wind_gust = data.wind_gust;
   store.Weathercoat.wind_direction = data.wind_direction;
   store.Weathercoat.alert = data.alert;
-  [
-    store.Weathercoat.forecast_day1,
-    store.Weathercoat.forecast_day2,
-    store.Weathercoat.forecast_day3,
-    store.Weathercoat.forecast_day4,
-    store.Weathercoat.forecast_day5
-  ] = data.restOfDays;
+  console.log("RestofDays", data.restOfDays);
+  if (data.restOfDays) {
+    [
+      store.Weathercoat.forecast_day1,
+      store.Weathercoat.forecast_day2,
+      store.Weathercoat.forecast_day3,
+      store.Weathercoat.forecast_day4,
+      store.Weathercoat.forecast_day5
+    ] = data.restOfDays;
+  }
   store.Weathercoat.weather_location = `${data.city}, ${data.state} (${data.lat}. ${data.lon}) ${data.country}`;
   store.Weathercoat.weather_city = data.city;
   store.Weathercoat.weather_state = data.state;
   store.Weathercoat.weather_country = data.country;
+  store.Weathercoat.lat = data.lat;
+  store.Weathercoat.lon = data.lon;
   store.Weathercoat.today_icon = data.today_icon;
   store.Weathercoat.load_avatar = chooseClothes(store.Weathercoat);
   loadDateTime();
@@ -234,11 +183,12 @@ router.hooks({
             params: {
               city: store.Weathercoat.weather_city,
               state: store.Weathercoat.weather_state,
-              country: store.Weathercoat.weather_country
+              country: store.Weathercoat.weather_country,
+              lat: store.Weathercoat.lat,
+              lon: store.Weathercoat.lon
             }
           })
         );
-
         if (!store.Weathercoat.quote) {
           weathercoat_links.push(
             axios.get("https://api.goprogram.ai/inspiration")
@@ -252,8 +202,9 @@ router.hooks({
               alert(weatherResponse.data.error);
               weatherResponse.data.error = "";
               done();
+            } else {
+              setWeatherData(weatherResponse.data);
             }
-            setWeatherData(weatherResponse.data);
             if (responses.length > 1) {
               let inspirationResponse = responses[1].value;
               store.Weathercoat.quote = `'${inspirationResponse.data.quote}'`;
@@ -283,7 +234,9 @@ router.hooks({
           params: {
             city: store.Weathercoat.weather_city,
             state: store.Weathercoat.weather_state,
-            country: store.Weathercoat.weather_country
+            country: store.Weathercoat.weather_country,
+            lat: store.Weathercoat.lat,
+            lon: store.Weathercoat.lon
           }
         })
       );
@@ -301,8 +254,10 @@ router.hooks({
             alert(weatherResponse.data.error);
             weatherResponse.data.error = "";
             render(store.Weathercoat);
+            return;
+          } else {
+            setWeatherData(weatherResponse.data);
           }
-          setWeatherData(weatherResponse.data);
           if (responses.length > 1) {
             let inspirationResponse = responses[1].value;
             store.Weathercoat.quote = `'${inspirationResponse.data.quote}'`;
