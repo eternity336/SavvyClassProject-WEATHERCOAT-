@@ -7,101 +7,81 @@ import * as images from "./Images";
 import countries from "./data/countries.json";
 
 const router = new Navigo("/");
-const weatherTestData = {
-  currentTemp: 63,
-  feelTemp: 63,
-  humidity: 82,
-  visibility: 100,
-  today_icon: "03n",
-  restOfDays: [
-    {
-      date: "2023-03-11",
-      temp: 58,
-      icon: "02n"
-    },
-    {
-      date: "2023-03-12",
-      temp: 69,
-      icon: "10n"
-    },
-    {
-      date: "2023-03-13",
-      temp: 53,
-      icon: "04n"
-    },
-    {
-      date: "2023-03-14",
-      temp: 46,
-      icon: "04n"
-    },
-    {
-      date: "2023-03-15",
-      temp: 49,
-      icon: "04d"
-    }
-  ],
-  lat: 30.4199,
-  lon: -87.217,
-  city: "Pensacola"
-};
 
-function getImage(src, nextFunc) {
-  //universal function for adding images to the canvas.
-  // console.log("Get Image");
-  let img = new Image();
-  img.addEventListener("load", () => {
-    nextFunc(img);
-  });
-  img.addEventListener("error", err => {
-    console.log("error", err);
-  });
-  img.src = src;
-}
+// function getImage(src, nextFunc) {
+//   //universal function for adding images to the canvas.
+//   // console.log("Get Image");
+//   let img = new Image();
+//   img.addEventListener("load", () => {
+//     nextFunc(img);
+//   });
+//   img.addEventListener("error", err => {
+//     console.log("error", err);
+//   });
+//   img.src = src;
+// }
 
-function loadAvatar(img = this) {
-  //This is just for loading the avatar.  It clears the canvas and adds the avatar
-  // console.log("Load Avatar", img, img.width, img.height);
-  let av = document.getElementById("avatar");
-  let av_ctx = av.getContext("2d");
-  av_ctx.imageSmoothingEnabled = false;
-  av_ctx.beginPath();
-  av_ctx.rect(0, 0, av.width, av.height);
-  av_ctx.fillStyle = "lightblue";
-  av_ctx.fill();
-  av_ctx.drawImage(
-    img,
-    0,
-    0,
-    img.width,
-    img.height,
-    5,
-    5,
-    av.width - 10,
-    av.height - 10
-  );
-}
+// function loadAvatar(img = this) {
+//   //This is just for loading the avatar.  It clears the canvas and adds the avatar
+//   // console.log("Load Avatar", img, img.width, img.height);
+//   let av = document.getElementById("avatar");
+//   let av_ctx = av.getContext("2d");
+//   av_ctx.imageSmoothingEnabled = false;
+//   av_ctx.beginPath();
+//   av_ctx.rect(0, 0, av.width, av.height);
+//   av_ctx.fillStyle = "lightblue";
+//   av_ctx.fill();
+//   av_ctx.drawImage(
+//     img,
+//     0,
+//     0,
+//     img.width,
+//     img.height,
+//     5,
+//     5,
+//     av.width - 10,
+//     av.height - 10
+//   );
+// }
 
-function loadClothes(img = this) {
-  //This will not clear the canvas.  This is for adding the layers of clothing to the avatar.
-  let av = document.getElementById("avatar");
-  let av_ctx = av.getContext("2d");
-  av_ctx.imageSmoothingEnabled = false;
-  av_ctx.drawImage(
-    img,
-    0,
-    0,
-    img.width,
-    img.height,
-    2,
-    2,
-    av.width - 4,
-    av.height - 4
-  );
+// function loadClothes(img = this) {
+//   //This will not clear the canvas.  This is for adding the layers of clothing to the avatar.
+//   let av = document.getElementById("avatar");
+//   let av_ctx = av.getContext("2d");
+//   av_ctx.imageSmoothingEnabled = false;
+//   av_ctx.drawImage(
+//     img,
+//     0,
+//     0,
+//     img.width,
+//     img.height,
+//     2,
+//     2,
+//     av.width - 4,
+//     av.height - 4
+//   );
+// }
+
+function chooseClothes(data) {
+  if (data.alert.includes("rain")) {
+    return "raincoat";
+  }
+  if (data.alert.includes("snow")) {
+    return "winter";
+  }
+  if (data.realFeel > 60) {
+    return "cool";
+  } else if (60 >= data.realFeel < 65) {
+    return "mid";
+  } else if (65 >= data.realFeel < 75) {
+    return "warm";
+  } else {
+    return "hot";
+  }
 }
 
 function setCustomCity() {
   //Loads form to allow user to change the default location lookup.
-  console.log("clicked");
   let form = document.createElement("form");
   form.id = "custom_location";
   let header = document.createElement("header");
@@ -166,7 +146,8 @@ function afterRender(state) {
       radio.onclick = function() {
         store.Weathercoat.avatar = this.id;
         console.log("Selected Avatar: ", store.Weathercoat.avatar);
-        getImage(images[store.Weathercoat.avatar], loadAvatar);
+        router.navigate("/weathercoat");
+        // getImage(images[store.Weathercoat.avatar], loadAvatar);
       };
     }
 
@@ -179,7 +160,8 @@ function afterRender(state) {
         radio.checked = true;
       }
     });
-    getImage(images[store.Weathercoat.avatar], loadAvatar);
+    // router.navigate("/weathercoat");
+    // getImage(images[store.Weathercoat.avatar], loadAvatar);
   }
 }
 
@@ -208,13 +190,23 @@ function setWeatherData(data) {
   store.Weathercoat.realFeel = `${data.feelTemp}\xBAF`;
   store.Weathercoat.realTemp = `${data.currentTemp}\xBAF`;
   store.Weathercoat.visibility = `${data.visibility}%`;
+  store.Weathercoat.wind_speed = data.wind_speed;
+  store.Weathercoat.wind_gust = data.wind_gust;
+  store.Weathercoat.wind_direction = data.wind_direction;
   store.Weathercoat.alert = data.alert;
-  store.Weathercoat.restOfDays = data.restOfDays;
+  [
+    store.Weathercoat.forecast_day1,
+    store.Weathercoat.forecast_day2,
+    store.Weathercoat.forecast_day3,
+    store.Weathercoat.forecast_day4,
+    store.Weathercoat.forecast_day5
+  ] = data.restOfDays;
   store.Weathercoat.weather_location = `${data.city}, ${data.state} (${data.lat}. ${data.lon}) ${data.country}`;
   store.Weathercoat.weather_city = data.city;
   store.Weathercoat.weather_state = data.state;
   store.Weathercoat.weather_country = data.country;
   store.Weathercoat.today_icon = data.today_icon;
+  store.Weathercoat.load_avatar = chooseClothes(store.Weathercoat);
   loadDateTime();
 }
 
@@ -237,7 +229,6 @@ router.hooks({
         done();
         break;
       case "Weathercoat":
-        console.log("Weathercoat");
         weathercoat_links.push(
           axios.get(`${process.env.WEATHER_SERVER}/weather`, {
             params: {
@@ -256,9 +247,10 @@ router.hooks({
         Promise.allSettled(weathercoat_links)
           .then(responses => {
             let weatherResponse = responses[0].value;
-            console.log(weatherResponse.data);
             if (weatherResponse.data.error) {
+              console.log("Before: ", weatherResponse.data.error);
               alert(weatherResponse.data.error);
+              weatherResponse.data.error = "";
               done();
             }
             setWeatherData(weatherResponse.data);
@@ -284,10 +276,8 @@ router.hooks({
       params && params.data && params.data.view
         ? capitalize(params.data.view)
         : "Home";
-    console.log("already", view);
     let weathercoat_links = [];
     if (view == "Weathercoat") {
-      console.log("Weathercoat already");
       weathercoat_links.push(
         axios.get(`${process.env.WEATHER_SERVER}/weather`, {
           params: {
@@ -305,11 +295,11 @@ router.hooks({
       }
       Promise.allSettled(weathercoat_links)
         .then(responses => {
-          console.log("responses", responses);
           let weatherResponse = responses[0].value;
-          console.log(weatherResponse.data);
           if (weatherResponse.data.error) {
+            console.log("Already: ", weatherResponse.data.error);
             alert(weatherResponse.data.error);
+            weatherResponse.data.error = "";
             render(store.Weathercoat);
           }
           setWeatherData(weatherResponse.data);

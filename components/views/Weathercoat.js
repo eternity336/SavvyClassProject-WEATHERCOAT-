@@ -1,5 +1,8 @@
 import html from "html-literal";
 import edit from "../../Images/edit.png";
+import compass from "../../Images/compass.png";
+import * as images from "../../Images";
+
 export default store => html`
   <section id="weathercoat">
     <div class="weather_view">
@@ -8,7 +11,7 @@ export default store => html`
           <p class="weather_sub_title">Real Temp</p>
           <p id="realTemp" class="weather_nums">
             ${store.realTemp}
-            <img src = "https://openweathermap.org/img/wn/${store.today_icon}.png" alt="${store.today_icon}" width="100%"></img>
+            <img src = "https://openweathermap.org/img/wn/${store.today_icon}@2x.png" alt="${store.today_icon}"></img>
           </p>
           
         </div>
@@ -18,6 +21,19 @@ export default store => html`
             ${store.visibility}
           </p>
         </div>
+        <div>
+          <p class="weather_sub_title">Wind</p>
+          <p class="wind_nums">
+            Speed: ${store.wind_speed} 
+          </p>
+          <p class="wind_nums">
+            Direction: &ensp;<img src="${compass}" style="height: 30px; transform: rotate(${store.wind_direction}deg)">
+          </p>
+          <p class="wind_nums">
+            Gust: ${store.wind_gust}
+          </p>
+        </div>
+        
         <div>
           <p class="weather_sub_title">Inspirational Message</p>
           <br />
@@ -46,16 +62,20 @@ export default store => html`
         </div>
         <div class="avatar_div center_div">
           <div class="alert"><span>${store.alert}</span></div>
-          <canvas id="avatar" alt="Weather Avatar"></canvas>
+          <img id="avatar" src="${
+            images[store.avatar + "_" + store.load_avatar]
+          }" alt="Weather Avatar"></img>
           <div>
-            <input type="radio" name="player" id="avatar1" checked />
-            <label for="avatar1">Avatar 1</label>
-            <input type="radio" name="player" id="avatar2" />
-            <label for="avatar2">Avatar 2</label>
-            <input type="radio" name="player" id="avatar3" />
-            <label for="avatar3">Avatar 3</label>
-            <input type="radio" name="player" id="avatar4" />
-            <label for="avatar4">Avatar 4</label>
+            <input type="radio" name="player" id="cat" checked />
+            <label for="cat">Cat</label>
+            <input type="radio" name="player" id="dog" />
+            <label for="dog">Dog</label>
+            <input type="radio" name="player" id="frog" />
+            <label for="frog">Frog</label>
+            <input type="radio" name="player" id="giraffe" />
+            <label for="giraffe">Giraffe</label>
+            <input type="radio" name="player" id="ox" />
+            <label for="ox">Ox</label>
           </div>
         </div>
       </div>
@@ -63,29 +83,29 @@ export default store => html`
         <div class="forecast">
           <p class="weather_sub_title">5 Day Forecast</p>
           <div class="forecast_div">
-            <p class="forecast_date">${store.restOfDays[0].date}</p>
-            <p class="forecast_temp">${store.restOfDays[0].temp}\xBAF</p>
-            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[0].icon}.png" alt="${store.restOfDays[0].icon}"></img>
+            <p class="forecast_date">${store.forecast_day1.date}</p>
+            <p class="forecast_temp">${store.forecast_day1.temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.forecast_day1.icon}.png" alt="${store.forecast_day1.icon}"></img>
           </div>
           <div class="forecast_div">
-            <p class="forecast_date">${store.restOfDays[1].date}</p>
-            <p class="forecast_temp">${store.restOfDays[1].temp}\xBAF</p>
-            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[1].icon}.png" alt="${store.restOfDays[1].icon}"></img>
+            <p class="forecast_date">${store.forecast_day2.date}</p>
+            <p class="forecast_temp">${store.forecast_day2.temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.forecast_day2.icon}.png" alt="${store.forecast_day2.icon}"></img>
           </div>
           <div class="forecast_div">
-            <p class="forecast_date">${store.restOfDays[2].date}</p>
-            <p class="forecast_temp">${store.restOfDays[2].temp}\xBAF</p>
-            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[2].icon}.png" alt="${store.restOfDays[2].icon}"></img>
+            <p class="forecast_date">${store.forecast_day3.date}</p>
+            <p class="forecast_temp">${store.forecast_day3.temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.forecast_day3.icon}.png" alt="${store.forecast_day3.icon}"></img>
           </div>
           <div class="forecast_div">
-            <p class="forecast_date">${store.restOfDays[3].date}</p>
-            <p class="forecast_temp">${store.restOfDays[3].temp}\xBAF</p>
-            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[3].icon}.png" alt="${store.restOfDays[3].icon}"></img>
+            <p class="forecast_date">${store.forecast_day4.date}</p>
+            <p class="forecast_temp">${store.forecast_day4.temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.forecast_day4.icon}.png" alt="${store.forecast_day4.icon}"></img>
           </div>
           <div class="forecast_div">
-            <p class="forecast_date">${store.restOfDays[4].date}</p>
-            <p class="forecast_temp">${store.restOfDays[4].temp}\xBAF</p>
-            <img src = "https://openweathermap.org/img/wn/${store.restOfDays[4].icon}.png" alt="${store.restOfDays[4].icon}"></img>
+            <p class="forecast_date">${store.forecast_day5.date}</p>
+            <p class="forecast_temp">${store.forecast_day5.temp}\xBAF</p>
+            <img src = "https://openweathermap.org/img/wn/${store.forecast_day5.icon}.png" alt="${store.forecast_day5.icon}"></img>
           </div>
         </div>
         <div class="right_div">
