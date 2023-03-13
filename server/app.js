@@ -6,7 +6,7 @@ const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 4040;
 
-// CORS Middleware used to add headers (Not safe but needed for local testing)
+//CORS Middleware used to add headers (Not safe but needed for local testing)
 const cors = (req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Headers",
@@ -39,12 +39,14 @@ app.get("/weather", async (request, response) => {
     let state = data.state;
     let country = data.country;
     if (city) {
+      console.log("CITY");
       response.json(await getLatLonByCity(city, state, country));
       return;
     }
   }
 
   if (["::ffff:127.0.0.1", "::1", "127.0.0.1"].includes(IP)) {
+    console.log("LOCAL");
     response.json(await getLatLon("174.69.63.85"));
     return;
   }
@@ -57,11 +59,13 @@ async function getLatLonByCity(city, state, country) {
   if (state) {
     _state = `&state=${state}`;
   }
-  return await axios
-    .get(
-      `https://api.api-ninjas.com/v1/geocoding?city=${city}${_state}&country=${country}`,
-      { headers: { "X-Api-Key": "nNF8CwcsuVqRD5/fwmdxIg==vAB2FHpFJpQHxXVm" } }
-    )
+  return await axios({
+    url: `https://api.api-ninjas.com/v1/geocoding?city=${city}${_state}&country=${country}`,
+    method: "GET",
+    headers: {
+      "X-Api-Key": "nNF8CwcsuVqRD5/fwmdxIg==vAB2FHpFJpQHxXVm"
+    }
+  })
     .then(async response => {
       // Storing retrieved data in state
       let data = response.data[0];
@@ -86,7 +90,7 @@ async function getLatLon(IP) {
   //function used to get lat/lon needed for weather based on IP information
   return await axios
     .get(`https://ipapi.co/${IP}/json/`)
-    .then(response => {
+    .then(async response => {
       // Storing retrieved data in state
       let data = response.data;
       let lat = data.latitude;
@@ -145,7 +149,7 @@ async function getWeather(lat, lon, city, state, country) {
     .post(
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`
     )
-    .then(response => {
+    .then(async response => {
       return formatWeather(response.data.list, lat, lon, city, state, country);
     })
     .catch(error => {
