@@ -72,7 +72,7 @@ async function getLatLonByCity(city, state, country) {
         if (data.country == "US") {
           state = data.state;
         }
-        return await getWeather(lat, lon, city, state, country);
+        return getWeather(lat, lon, city, state, country);
       }
       return { error: "Not a location!" };
     })
