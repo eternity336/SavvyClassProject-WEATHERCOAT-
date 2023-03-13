@@ -38,6 +38,14 @@ app.get("/weather", async (request, response) => {
     let city = data.city;
     let state = data.state;
     let country = data.country;
+    let lat = data.lat;
+    let lon = data.lon;
+    if (lat && lon) {
+      console.log("LAT&LON");
+      response.json(await getWeather(lat, lon, city, state, country));
+      return;
+    }
+
     if (city) {
       console.log("CITY");
       response.json(await getLatLonByCity(city, state, country));
@@ -55,27 +63,23 @@ app.get("/weather", async (request, response) => {
 
 async function getLatLonByCity(city, state, country) {
   //Function for getting the lat/lon needed for weather based on city information
-  let _state = "";
-  if (state) {
-    _state = `&state=${state}`;
-  }
   return await axios({
-    url: `https://api.api-ninjas.com/v1/geocoding?city=${city}${_state}&country=${country}`,
-    method: "GET",
-    headers: {
-      "X-Api-Key": "nNF8CwcsuVqRD5/fwmdxIg==vAB2FHpFJpQHxXVm"
-    }
+    url: `http://api.positionstack.com/v1/forward?query=${[
+      city,
+      state,
+      country
+    ]}&access_key=${process.env.POSITIONSTACK_API}`,
+    method: "GET"
   })
     .then(async response => {
       // Storing retrieved data in state
-      let data = response.data[0];
+      let data = response.data.data[0];
       if (data) {
         let lat = data.latitude;
         let lon = data.longitude;
         let city = data.name;
-        if (data.country == "US") {
-          state = data.state;
-        }
+        state = data.region;
+        country = data.country_code;
         return getWeather(lat, lon, city, state, country);
       }
       return { error: "Not a location!" };
