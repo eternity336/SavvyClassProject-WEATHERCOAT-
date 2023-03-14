@@ -16,13 +16,13 @@ function chooseClothes(data) {
   }
   if (data.realFeel <= 25) {
     return "winter";
-  } else if (25 < data.realFeel < 45) {
+  } else if (25 < data.realFeel && data.realFeel < 45) {
     return "jacket";
-  } else if (45 < data.realFeel < 60) {
+  } else if (45 <= data.realFeel && data.realFeel < 60) {
     return "cool";
-  } else if (60 < data.realFeel < 65) {
+  } else if (60 <= data.realFeel && data.realFeel < 65) {
     return "mid";
-  } else if (65 < data.realFeel < 75) {
+  } else if (65 <= data.realFeel && data.realFeel < 75) {
     return "warm";
   } else {
     return "hot";
