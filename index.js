@@ -14,15 +14,15 @@ function chooseClothes(data) {
   if (data.alert.includes("snow")) {
     return "winter";
   }
-  if (data.realFeel <= 25) {
+  if (data.feelTemp <= 25) {
     return "winter";
-  } else if (25 < data.realFeel && data.realFeel < 45) {
+  } else if (data.feelTemp < 45) {
     return "jacket";
-  } else if (45 <= data.realFeel && data.realFeel < 60) {
+  } else if (data.feelTemp < 60) {
     return "cool";
-  } else if (60 <= data.realFeel && data.realFeel < 65) {
+  } else if (data.feelTemp < 65) {
     return "mid";
-  } else if (65 <= data.realFeel && data.realFeel < 75) {
+  } else if (data.feelTemp < 75) {
     return "warm";
   } else {
     return "hot";
@@ -38,12 +38,12 @@ function setCustomCity() {
   city.id = "city";
   city.name = "city";
   city.placeholder = "city";
-  city.pattern = "[a-zA-Z]+?";
+  city.pattern = "[ a-zA-Z]+";
   city.required = true;
   let state = document.createElement("input");
   state.id = "state";
   state.name = "state";
-  state.pattern = "[a-zA-Z]+?";
+  state.pattern = "[ a-zA-Z]+";
   state.placeholder = "State (Optional) for US Only";
   let country = document.createElement("select");
   country.id = "country";
@@ -158,7 +158,7 @@ function setWeatherData(data) {
   store.Weathercoat.lat = data.lat;
   store.Weathercoat.lon = data.lon;
   store.Weathercoat.today_icon = data.today_icon;
-  store.Weathercoat.load_avatar = chooseClothes(store.Weathercoat);
+  store.Weathercoat.load_avatar = chooseClothes(data);
   loadDateTime();
 }
 
