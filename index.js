@@ -14,11 +14,15 @@ function chooseClothes(data) {
   if (data.alert.includes("snow")) {
     return "winter";
   }
-  if (data.realFeel > 60) {
+  if (data.realFeel <= 25) {
+    return "winter";
+  } else if (25 < data.realFeel < 45) {
+    return "jacket";
+  } else if (45 < data.realFeel < 60) {
     return "cool";
-  } else if (60 >= data.realFeel < 65) {
+  } else if (60 < data.realFeel < 65) {
     return "mid";
-  } else if (65 >= data.realFeel < 75) {
+  } else if (65 < data.realFeel < 75) {
     return "warm";
   } else {
     return "hot";
@@ -138,7 +142,6 @@ function setWeatherData(data) {
   store.Weathercoat.wind_gust = data.wind_gust;
   store.Weathercoat.wind_direction = data.wind_direction;
   store.Weathercoat.alert = data.alert;
-  console.log("RestofDays", data.restOfDays);
   if (data.restOfDays) {
     [
       store.Weathercoat.forecast_day1,
