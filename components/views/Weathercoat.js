@@ -7,21 +7,20 @@ export default store => html`
   <section id="weathercoat">
     <div class="weather_view">
       <div class="left_view">
-        <div>
+        <div id="weather_realtemp_div">
           <p class="weather_sub_title">Real Temp</p>
           <p id="realTemp" class="weather_nums">
             ${store.realTemp}
             <img src = "https://openweathermap.org/img/wn/${store.today_icon}@2x.png" alt="${store.today_icon}"></img>
           </p>
-          
         </div>
-        <div>
+        <div id="weather_visibility_div">
           <p class="weather_sub_title">Visibility</p>
           <p id="visibility" class="weather_nums">
             ${store.visibility}
           </p>
         </div>
-        <div>
+        <div id="weather_wind_div">
           <p class="weather_sub_title">Wind</p>
           <p class="wind_nums">
             Speed: ${store.wind_speed} 
@@ -34,7 +33,7 @@ export default store => html`
           </p>
         </div>
         
-        <div>
+        <div id="weather_quote_div">
           <p class="weather_sub_title">Inspirational Message</p>
           <br />
           <p id="inspiration_quote">${store.quote}</p>
@@ -43,17 +42,17 @@ export default store => html`
         </div>
       </div>
       <div class="center_view">
-        <div class="center_div">
+        <div id="weather_date_div" class="center_div">
           <p id="weather_date">
             ${store.weather_date}
           </p>
         </div>
-        <div class="center_div">
+        <div id="weather_time_div" class="center_div">
           <p id="weather_time">
             ${store.weather_time}
           </p>
         </div>
-        <div class="center_div">
+        <div  id="weather_location_div" class="center_div">
           <img id="weather_location">
             ${store.weather_location}
             <img id="edit" src="${edit}" width="20px" alt="edit"/>
@@ -65,7 +64,7 @@ export default store => html`
           <img id="avatar" src="${
             images[store.avatar + "_" + store.load_avatar]
           }" alt="Weather Avatar"></img>
-          <div>
+          <div id="avatar_radio_div">
             <input type="radio" name="player" id="cat" checked />
             <label for="cat">Cat</label>
             <input type="radio" name="player" id="dog" />
@@ -108,13 +107,13 @@ export default store => html`
             <img src = "https://openweathermap.org/img/wn/${store.forecast_day5.icon}.png" alt="${store.forecast_day5.icon}"></img>
           </div>
         </div>
-        <div class="right_div">
+        <div id="weather_realfeel_div" class="right_div">
           <p class="weather_sub_title">Real Feel Temp</p>
           <p id="realFeel" class="weather_nums">
             ${store.realFeel}
           </p>
         </div>
-        <div class="right_div">
+        <div id="weather_humidity_div" class="right_div">
           <p class="weather_sub_title">Humidity</p>
           <p id="humidity" class="weather_nums">
             ${store.humidity}

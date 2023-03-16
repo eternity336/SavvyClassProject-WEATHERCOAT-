@@ -4,8 +4,9 @@ import menuHome from "../Images/home.png";
 import menuAbout from "../Images/info.png";
 import menuContact from "../Images/contact.png";
 import menuWeatherCoat from "../Images/sun.png";
+import menuLogin from "../Images/login.png";
 
-export default () => html`
+export default (state) => html`
   <header class="home_header">
     <div id="menu_bar">
       <img id="menu_button_icon" src="${menuSun}" alt="Menu Button" />
@@ -33,6 +34,15 @@ export default () => html`
           WEATHERCOAT
         </a>
       </div>
+      <div class="menu_button menu_last">
+        <div id="login">
+          <img src="${menuLogin}" alt="Login" /><br />
+          LOGIN
+        </div>
+      </div>
     </div>
+    <p id="header_p_text">
+      Welcome to Weathercoat ${state.username ? state.username : ""}
+    </p>
   </header>
 `;

@@ -26,6 +26,7 @@ export default {
   weather_city: "",
   weather_state: "",
   weather_country: "",
+  username: "",
   avatar: "cat",
   load_avatar: "",
   lat: "",

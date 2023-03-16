@@ -1,10 +1,19 @@
+const mongoose = require("mongoose");
 const express = require("express");
 const dotenv = require("dotenv");
 const axios = require("axios");
+const users = require("./routers/users");
 
 const app = express();
 dotenv.config();
 const PORT = process.env.PORT || 4040;
+mongoose.connect(process.env.MONGODB);
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "Connection Error:"));
+db.once(
+  "open",
+  console.log.bind(console, "Successfully opened connection to Mongo!")
+);
 
 //CORS Middleware used to add headers (Not safe but needed for local testing)
 const cors = (req, res, next) => {
@@ -26,6 +35,7 @@ const cors = (req, res, next) => {
 app.set("trust proxy", "loopback, linklocal, uniquelocal");
 app.use(express.json());
 app.use(cors);
+app.use("/users", users);
 
 const kelvinToFahrenheit = kelvinTemp =>
   Math.round((kelvinTemp - 273.15) * (9 / 5) + 32);
@@ -90,6 +100,29 @@ async function getLatLonByCity(city, state, country) {
     });
 }
 
+async function getCityStateCountry(lat, lon) {
+  return await axios({
+    url: `http://api.positionstack.com/v1/reverse?query=${[
+      lat,
+      lon
+    ]}&access_key=${process.env.POSITIONSTACK_API}`,
+    method: "GET"
+  })
+    .then(async response => {
+      // Storing retrieved data in state
+      let data = response.data.data[0];
+      console.log(response.data.data);
+      if (data) {
+        return [data.locality, data.region, data.country_code];
+      }
+      return ["", "", ""];
+    })
+    .catch(error => {
+      console.log("It puked on custom [lat lon]", error);
+      return { error: "Sorry wasn't able to find your location.  Try again." };
+    });
+}
+
 async function getLatLon(IP) {
   //function used to get lat/lon needed for weather based on IP information
   return await axios
@@ -102,9 +135,7 @@ async function getLatLon(IP) {
       let city = data.city;
       let state = "";
       let country = data.country_code;
-      if (country == "US") {
-        state = data.region_code;
-      }
+      state = data.region_code;
       return getWeather(lat, lon, city, state, country);
     })
     .catch(error => {
@@ -116,6 +147,7 @@ async function getLatLon(IP) {
 function formatWeather(weather, lat, lon, city, state, country) {
   //Sets up weather data for return
   let today = weather[0];
+  console.log([city, state, country]);
   let restOfDays = weather
     .filter(data => data.dt_txt.split(" ")[1] == "12:00:00")
     .map(item => {
@@ -154,6 +186,9 @@ async function getWeather(lat, lon, city, state, country) {
       `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${process.env.WEATHER_API}`
     )
     .then(async response => {
+      if (!city) {
+        [city, state, country] = await getCityStateCountry(lat, lon);
+      }
       return formatWeather(response.data.list, lat, lon, city, state, country);
     })
     .catch(error => {
